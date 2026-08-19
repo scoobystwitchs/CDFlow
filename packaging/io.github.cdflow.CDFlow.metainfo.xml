@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>io.github.cdflow.CDFlow</id>
+  <name>CDFlow</name>
+  <summary>Play, inspect, browse, and rip compact discs</summary>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>MIT</project_license>
+  <developer id="io.github.cdflow">
+    <name>CDFlow contributors</name>
+  </developer>
+  <description>
+    <p>
+      CDFlow is a lightweight, local-first Linux desktop application for audio
+      CD playback and extraction, disc information, and read-only data-CD
+      browsing.
+    </p>
+    <p>
+      Core disc functions work without an account or server. Optional metadata
+      lookup can be disabled and locally cached information remains available
+      offline.
+    </p>
+  </description>
+  <launchable type="desktop-id">io.github.cdflow.CDFlow.desktop</launchable>
+  <provides>
+    <binary>cdflow</binary>
+  </provides>
+  <categories>
+    <category>AudioVideo</category>
+    <category>Audio</category>
+  </categories>
+  <content_rating type="oars-1.1" />
+  <releases>
+    <release version="0.1.0" date="2026-08-18">
+      <description>
+        <p>Initial development release.</p>
+      </description>
+    </release>
+  </releases>
+</component>

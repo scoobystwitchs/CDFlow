@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+APPDIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+export PATH="$APPDIR/usr/bin${PATH:+:$PATH}"
+
+exec "$APPDIR/usr/lib/cdflow/cdflow" "$@"
+

@@ -1,0 +1,4 @@
+# Runtime dependencies are declared in pyproject.toml. This compatibility file
+# keeps `python -m pip install -r requirements.txt` useful for source checkouts.
+-e .
+

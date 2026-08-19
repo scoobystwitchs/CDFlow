@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Application
+Name=CDFlow
+GenericName=CD Player and Ripper
+Comment=Play, inspect, browse, and rip compact discs
+Exec=cdflow
+Icon=io.github.cdflow.CDFlow
+Terminal=false
+Categories=AudioVideo;Audio;Player;Qt;
+Keywords=CD;Audio;Ripper;Disc;Music;
+StartupNotify=true
+StartupWMClass=io.github.cdflow.CDFlow
+
