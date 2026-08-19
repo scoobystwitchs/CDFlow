@@ -1070,72 +1070,89 @@ I’d also feed Codex the pink Now Playing image you approved plus the reference
 Pasted text.txt
 Document
 
-That 9-byte download means GitHub returned a tiny “Not Found” response instead of the AppImage.
-
-The most likely reason is: your CDFlow repo is private, so a normal anonymous curl to the release asset won’t work. I can see the repo is currently private.
-
-For your own logged-in machine, use GitHub CLI so it authenticates:
-
-gh release download v0.1.0 \
-  --repo scoobystwitchs/CDFlow \
-  --pattern "CDFlow-0.1.0-x86_64.AppImage"
-
-Then:
-
-chmod +x CDFlow-0.1.0-x86_64.AppImage
-./CDFlow-0.1.0-x86_64.AppImage
-
-If you want other users to install it with a simple curl command, the easiest option is to make the GitHub repository/release public. Then this direct URL can work without authentication:
-
-curl -fL \
-"https://github.com/scoobystwitchs/CDFlow/releases/download/v0.1.0/CDFlow-0.1.0-x86_64.AppImage" \
--o CDFlow.AppImage
-
-The -f is useful because it makes curl fail on a 404 instead of saving "Not Found" as if it were an AppImage.
-
-Also delete the broken 9-byte file first:
-
-rm -f CDFlow.AppImage
-
-If you want, I’d make CDFlow public now, then we can test the exact one-command installer that another Fedora user would run.
-
-how can i make  github public
-
-On GitHub, open your CDFlow repository, then go to Settings. Scroll all the way down to Danger Zone, find Change repository visibility, click Change visibility, choose Public, then confirm the warnings and click Make this repository public. GitHub notes that once it’s public, anyone can view and fork the code, and Actions history/logs become public too.
-
-Before you do that, make sure you haven’t committed anything sensitive like API keys, passwords, private emails, tokens, or personal config files. Your .gitignore already excludes the obvious development folders, but it’s worth checking the repo contents once before making it public.
-
-After you switch it to public, the direct curl download command for your AppImage should work without GitHub authentication.
-
 Pasted markdown.md
 File
 make this cd flows welcome thing, include nice graphics, and a manual on how to use and setup, include  the appimage setup and everything, make it not look ai aswell. 
 
-I turned your current README into a much more polished GitHub welcome page + full user manual. It keeps the technical details from your existing documentation—Fedora setup, AppImage build, privacy paths, optical-drive permissions, troubleshooting, and hardware checks —but puts the normal-user experience first.
+Once the new README is actually copied into your CDFlow project as README.md, run:
 
-It now includes a proper hero section, release/download buttons, feature table, installation instructions, AppImage setup, Konsole download commands, metadata setup, ripping explanation, data-CD instructions, privacy section, troubleshooting, developer setup, AppImage build guide, release guide, and a cleaner project philosophy. I also added a screenshot slot at docs/screenshots/cdflow-main.png, so once you drop a screenshot there the README will show it automatically.
+cd "/home/jsbw/Documents/VScode projects/CDflow"
 
-Replace your existing README.md with it, then push:
-
-cp "/path/to/README_CDFlow_polished.md" README.md
 git add README.md
-git commit -m "Redesign CDFlow README and user guide"
-git push
+git commit -m "Update CDFlow README and user guide"
+git push origin main
 
-For the actual graphics, I’d make one proper wide CDFlow GitHub banner plus 2–3 clean screenshots with the pink UI rather than filling the README with generic icons. That will make it look much more like a real open-source app page and much less templated.
+If you also changed/added other files and want to push everything:
+
+git add .
+git commit -m "Update CDFlow documentation"
+git push origin main
+
+Then refresh your GitHub repo page and the new README should appear automatically.
+
+nonono, make it for the customer side not me, dont have the stuff on how to build it its for the people that want to download it not the developer
+
+Yep — I misunderstood the audience. The GitHub README should be the product/download page for normal CDFlow users, not developer documentation.
+
+I’d remove all of this from the main README:
+
+    PyInstaller instructions
+
+    appimagetool build instructions
+
+    Python virtual environments
+
+    Ruff/pytest
+
+    project structure
+
+    publishing releases
+
+    developer commands
+
+    source build instructions
+
+    internal hardware test checklist
+
+And make it flow more like:
+
+CDFlow → screenshots → what it does → Download → Install → First-time setup → Using CDs → Ripping → Metadata → Troubleshooting → Privacy → License.
+
+I’ll remake the README specifically as an end-user manual.
+
+okay remake it
+
+Done — I remade it entirely for people downloading and using CDFlow, not developers.
+
+The new README focuses on the actual customer/user journey: what CDFlow is, features, AppImage download and setup, adding it to the application menu, required Fedora packages, first launch, playing CDs, metadata/artwork setup, ripping and format explanations, collection/data CDs, privacy, troubleshooting, and FAQs.
+
+All the PyInstaller, Ruff, pytest, source-building, AppImage-building, release publishing, architecture and developer internals are gone.
+
+Once you've replaced your project's README.md, push it with:
+
+cd "/home/jsbw/Documents/VScode projects/CDflow"
+
+git add README.md
+git commit -m "Redesign README for CDFlow users"
+git push origin main
+
+One thing I'd add next is real screenshots. The README already expects:
+
+docs/screenshots/cdflow-main.png
+
+A proper CDFlow hero screenshot plus maybe Now Playing, Rip CD, and Collection screenshots would make the GitHub page look much more finished.
 
 
 Library
-/README_CDFlow_polished.md
+/README_CDFlow_users.md
 
 <div align="center">
 
-<img src="src/cdflow/assets/io.github.cdflow.CDFlow.svg" width="118" alt="CDFlow logo">
+<img src="src/cdflow/assets/io.github.cdflow.CDFlow.svg" width="120" alt="CDFlow logo">
 CDFlow
-Your physical CD collection, brought into a clean Linux desktop app.
+A modern home for your physical CDs on Linux.
 
-Play · Browse · Identify · Rip · Remember
-
+Play your discs. Identify your albums. Rip your music. Keep your collection local.
 
 
 
@@ -1143,73 +1160,82 @@ Play · Browse · Identify · Rip · Remember
 
 Download CDFlow
   •  
-Installation
+Setup Guide
   •  
-User Guide
+How to use it
   •  
-Troubleshooting
+Help
 
 </div>
 
-CDFlow is a lightweight, local-first Linux application for using physical compact discs without the dated interface of traditional CD utilities.
+CDFlow is a lightweight Linux desktop app built around something simple: using a physical CD should still feel good on a modern computer.
 
-Insert a disc and CDFlow reacts automatically. Audio CDs can be identified, played and ripped; data CDs can be browsed read-only; previously recognised albums can be remembered locally.
+Insert an audio CD and CDFlow can recognise it, show the album and tracks, fetch artwork, play it, and rip your music to local files.
 
-There are no accounts, no local web server, no Electron/Chromium layer, and no required cloud service. The core application remains useful offline.
+Insert a data CD and CDFlow gives you a simple read-only browser for its contents.
+
+There is no CDFlow account, no subscription, no local web server and no required cloud service. Your collection and ripped music stay on your computer.
 
     Current release: v0.1.0
-    CDFlow is currently developed and tested primarily on Fedora KDE Plasma / Wayland, x86_64.
+    CDFlow is currently intended primarily for modern x86_64 Linux systems and has been tested on Fedora KDE Plasma / Wayland.
 
-What it looks like
+Preview
 
-CDFlow uses a dark, compact interface with a pink accent and is designed to feel at home on a modern KDE desktop.
+<p align="center"> <img src="docs/screenshots/cdflow-main.png" width="900" alt="CDFlow showing an audio CD"> </p>
 
-<p align="center"> <img src="docs/screenshots/cdflow-main.png" width="900" alt="CDFlow main window"> </p>
+    If the image above is not visible yet, the repository owner still needs to add the application screenshot at docs/screenshots/cdflow-main.png.
 
-    The screenshot path above is ready for the repository. Add your preferred CDFlow screenshot as docs/screenshots/cdflow-main.png and GitHub will display it here automatically.
+What can CDFlow do?
 
-Features
+	
+	
+💿	Automatic CD detection	Insert or eject a disc and CDFlow reacts automatically.
+🎵	Play audio CDs	Browse tracks and control playback from the app.
+🏷️	Identify albums	Fetch album, artist, track and release information from MusicBrainz.
+🖼️	Album artwork	Display cover artwork when it is available.
+📥	Rip CDs	Save tracks to your computer as FLAC, WAV or MP3.
+📁	Browse data CDs	Open folders and files from mounted data discs.
+🗃️	Remember albums	Previously recognised discs can be kept in your local collection.
+📴	Work offline	Core disc features do not require an internet connection.
+🔒	Stay local	No account or CDFlow server is required.
+Installation
+Download the AppImage
 
-	Feature	What it does
-💿	Automatic disc detection	Reacts to optical-drive insert/eject events through UDisks2 rather than constantly polling the drive.
-🎵	Audio CD playback	View tracks and use play, pause, previous, next, volume and mute controls.
-🏷️	Album metadata	Optionally identifies albums and tracks using MusicBrainz and caches the result locally.
-🖼️	Cover artwork	Retrieves artwork when available and keeps a local cache for recognised discs.
-📥	CD ripping	Extract selected tracks or a full album to FLAC, WAV or MP3.
-📁	Data CD browser	Browse mounted data discs read-only and open files using your desktop defaults.
-🗃️	Local collection	Remembers previously recognised physical albums without requiring an account.
-📴	Offline-friendly	Playback, disc information, browsing and ripping do not depend on metadata services.
-🪶	Lightweight by design	Qt 6 UI, event-driven hardware handling and no embedded browser engine.
+The easiest way to use CDFlow is the standalone AppImage.
+Step 1 — Download
 
-CDFlow does not assume your optical drive is /dev/sr0; it uses the actual device reported by the system.
-Install CDFlow
-Option 1 — AppImage
+Go to:
+Download the latest CDFlow release
 
-This is the recommended way to use CDFlow.
-1. Download the latest release
+Under Assets, download the file ending in:
 
-Open:
+x86_64.AppImage
 
-github.com/scoobystwitchs/CDFlow/releases/latest
-
-Download the file named similar to:
+For example:
 
 CDFlow-0.1.0-x86_64.AppImage
 
-2. Make it executable
+Step 2 — Allow the AppImage to run
 
-Open Konsole in the folder containing the download:
+Open a terminal in your Downloads folder:
+
+cd ~/Downloads
+
+Then:
 
 chmod +x CDFlow-0.1.0-x86_64.AppImage
 
-3. Launch it
+If you downloaded a newer version, replace the filename with the one you downloaded.
+Step 3 — Open CDFlow
 
 ./CDFlow-0.1.0-x86_64.AppImage
 
-That is enough to run the application.
-Download from Konsole
+That's it.
 
-For v0.1.0:
+There is no traditional installer required to try CDFlow.
+Download from the terminal
+
+You can also download v0.1.0 directly:
 
 curl -fL \
   "https://github.com/scoobystwitchs/CDFlow/releases/download/v0.1.0/CDFlow-0.1.0-x86_64.AppImage" \
@@ -1218,34 +1244,37 @@ curl -fL \
 chmod +x CDFlow.AppImage
 ./CDFlow.AppImage
 
-Using -f is intentional: if GitHub returns an error page, curl stops instead of saving it as a fake AppImage.
-Option 2 — Install into your application menu
+Add CDFlow to your application menu
 
-If the repository contains install.sh, download and inspect it first:
+If the repository provides install.sh, you can install CDFlow for your Linux user so that it behaves more like a normal desktop application.
+
+Download the installer:
 
 curl -fsSL \
   https://raw.githubusercontent.com/scoobystwitchs/CDFlow/main/install.sh \
   -o install.sh
 
+You can inspect it before running it:
+
 less install.sh
 
-Then:
+Then install:
 
 chmod +x install.sh
 ./install.sh
 
-A normal per-user install can keep the AppImage in:
-
-~/.local/bin/CDFlow.AppImage
-
-and the desktop entry in:
-
-~/.local/share/applications/io.github.cdflow.CDFlow.desktop
-
-After that, CDFlow should appear in your KDE application launcher.
-System requirements
+After installation, look for CDFlow in your desktop's application launcher.
+Requirements
 
 CDFlow currently targets:
+
+    Linux
+
+    x86_64 / 64-bit Intel or AMD
+
+    a working internal or USB CD/DVD optical drive
+
+CDFlow has primarily been tested on:
 
     Fedora Linux
 
@@ -1253,13 +1282,12 @@ CDFlow currently targets:
 
     Wayland
 
-    x86_64
+Other modern Linux distributions may work, but are not yet the primary tested target.
+Recommended Fedora packages
 
-    A supported internal or USB optical CD/DVD drive
+The AppImage contains the CDFlow application itself, but CD playback and ripping also rely on normal Linux optical-disc and multimedia components.
 
-The AppImage bundles CDFlow's Python and Qt application libraries, but optical-drive applications still rely on parts of the host Linux system.
-
-On Fedora, these packages provide the recommended CD functionality:
+On Fedora, install the recommended packages with:
 
 sudo dnf install \
   udisks2 \
@@ -1271,60 +1299,59 @@ sudo dnf install \
   gstreamer1-plugins-good \
   python3-gobject
 
-What they are used for:
-Package	Purpose
-udisks2	Optical drive/media discovery and desktop integration
-libcdio	CD information and TOC utilities
-cdparanoia	Reliable CD digital-audio extraction
-gstreamer1*	Audio CD playback path
-ffmpeg-free	Local encoding/conversion support
-python3-gobject	GStreamer/PyGObject integration
+You only need to do this once.
 
-    CDFlow should never need to be run as root.
+    Do not run CDFlow as root.
 
 Using CDFlow
-First launch
+Starting the app
 
-Start CDFlow from your application launcher or AppImage.
+Open CDFlow from your application menu or launch the AppImage.
 
-With an empty optical drive, the application waits for media without repeatedly scanning the device.
+If your optical drive is empty, CDFlow will wait for a disc.
 
-Insert a CD and CDFlow should automatically move to the appropriate disc view.
-Audio CDs
+Insert a CD normally.
 
-When an audio CD is detected, CDFlow reads the table of contents and displays the available tracks.
+CDFlow should detect it automatically.
+Playing an audio CD
 
-You can then:
+Insert a standard audio CD into your optical drive.
 
-    play and pause
+CDFlow will read the disc and show its tracks.
 
-    move between tracks
+If metadata is available, you can also see:
 
-    change volume or mute
+    album name
 
-    inspect the disc and drive
+    artist
 
-    retrieve album information
+    track titles
 
-    rip selected tracks
+    release information
 
-    rip the full disc
+    album artwork
 
-    eject the disc
+Use the playback controls to:
 
-If online metadata has not loaded yet, tracks can initially appear as:
+    play
 
-Track 01
-Track 02
-Track 03
-...
+    pause
 
-The CD itself is still fully usable.
-Metadata and album artwork
+    go to the previous track
 
-CDFlow can use MusicBrainz to identify a physical CD and the Cover Art Archive for artwork.
+    go to the next track
 
-This is optional.
+    change volume
+
+    mute
+
+You can eject the disc from CDFlow when you are finished.
+Album names, tracks and artwork
+
+A normal audio CD does not necessarily contain all of the rich album information you see in streaming apps.
+
+CDFlow can optionally use MusicBrainz to identify the physical disc.
+Enable metadata
 
 Open:
 
@@ -1336,399 +1363,333 @@ Enter either:
 
     a project/contact URL
 
-MusicBrainz asks API clients to identify themselves responsibly. CDFlow uses the contact only as part of requests to the metadata services.
+Then enable metadata and artwork lookup.
 
-Then enable metadata/artwork lookup.
+MusicBrainz asks applications using its service to provide contact information in their requests. CDFlow does not require you to create a MusicBrainz account.
 
-When a disc is inserted, CDFlow:
+When a disc is recognised, CDFlow can retrieve:
 
-CD
- │
- ├─ reads disc ID + TOC
- │
- ▼
-MusicBrainz disc match
- │
- ▼
-best matching release
- │
- ├─ album / artist / tracks / date
- │
- └─ artwork
- │
- ▼
-local cache
+    album title
 
-Successful metadata is cached by disc ID, so recognised albums do not need to be looked up every time.
+    artist
 
-Temporary 429, 502, 503 and 504 responses are retried automatically with rate limiting and backoff. Metadata failure does not prevent playback or ripping.
+    track titles
+
+    track artists
+
+    release date
+
+    release information
+
+    cover artwork
+
+Recognised information is cached locally, so CDFlow does not need to download the same information every time you insert the disc.
+If metadata is unavailable
+
+The CD still works.
+
+You may temporarily see:
+
+Unknown Album
+
+Track 01
+Track 02
+Track 03
+...
+
+Playback and ripping are not dependent on MusicBrainz.
+
+If the metadata service is temporarily busy, CDFlow will retry automatically.
 Ripping a CD
 
-Ripping means copying the audio from the physical CD to music files on your computer.
+Ripping means copying the audio from your physical CD onto your computer.
 
-It does not alter or damage the CD.
+It does not erase, alter or damage the CD.
 
-Physical CD
-     │
-     ▼
-   CDFlow
-     │
-     ├────► FLAC
-     ├────► WAV
-     └────► MP3
+Your original disc remains completely usable afterward.
 
-The original disc remains unchanged and can still be used normally afterward.
-Which format should I use?
-FLAC — recommended
+       Physical CD
+            │
+            ▼
+         CDFlow
+       ╱     │     ╲
+      ▼      ▼      ▼
+    FLAC    WAV    MP3
 
-Lossless audio with substantially less storage use than WAV.
+Rip an album
 
-Choose FLAC when you want to preserve the CD's audio quality.
-WAV
+Insert an audio CD and open Rip CD.
 
-Uncompressed PCM audio.
+Choose the tracks you want to save, select the format and destination, then start the rip.
 
-Useful when you specifically need WAV, but files are considerably larger.
+CDFlow performs the extraction away from the main interface so the app can remain responsive.
+Which format should I choose?
+FLAC
+
+Recommended for most CD collections.
+
+FLAC keeps the original audio quality while using less storage than uncompressed WAV.
+
+Use FLAC if you want a high-quality local archive of your CDs.
 MP3
 
-Smaller files with lossy compression.
+MP3 uses much less storage and works with almost everything, but it achieves this by discarding some audio information.
 
-Useful for devices or situations where storage size matters more than preserving the exact original audio.
-Default library location
+Use MP3 when compatibility or file size matters more than keeping a lossless copy.
+WAV
 
-CDFlow normally writes ripped music beneath:
+WAV stores uncompressed audio and creates much larger files.
+
+It can be useful for particular editing or compatibility needs, but FLAC is usually a better choice for a personal music collection.
+Where does ripped music go?
+
+By default:
 
 ~/Music/CDFlow/
 
-For example:
+A recognised album may look like:
 
-~/Music/CDFlow/
-└── Artist/
-    └── Album/
-        ├── 01 - First Track.flac
-        ├── 02 - Second Track.flac
-        └── 03 - Third Track.flac
+Music/
+└── CDFlow/
+    └── Artist/
+        └── Album/
+            ├── 01 - Track Name.flac
+            ├── 02 - Track Name.flac
+            ├── 03 - Track Name.flac
+            └── ...
 
-Existing files should never be silently overwritten.
+You can change the destination from CDFlow's ripping settings.
+Your collection
+
+CDFlow can remember discs it has previously recognised.
+
+This gives you a simple local view of your physical music collection without turning CDFlow into an online music service.
+
+Collection information is stored on your computer.
 Data CDs
 
-When a mounted data CD is inserted, CDFlow provides a lightweight, read-only browser.
+CDFlow can also recognise mounted data CDs.
+
+Instead of the music player, you can browse the files and folders on the disc.
+
+CDFlow's data-disc browser is intentionally read-only.
 
 You can:
 
-    navigate folders
+    browse folders
 
     inspect files
 
-    see basic file information
+    open files with your normal Linux applications
 
-    open files using the default KDE/Linux application
-
-    inspect the disc and drive
+    view disc information
 
     eject the disc
 
-CDFlow intentionally does not offer write/edit operations for optical media.
-Local data and privacy
+CDFlow does not offer file editing or writing to the disc.
+Your data
 
-CDFlow follows Linux XDG conventions.
-Data	Default location
-Preferences	~/.config/cdflow/
-Metadata and artwork cache	~/.cache/cdflow/
+CDFlow stores its information in normal Linux user directories.
+What	Location
+Settings	~/.config/cdflow/
+Album metadata & artwork cache	~/.cache/cdflow/
 Remembered collection	~/.local/share/cdflow/
 Ripped music	~/Music/CDFlow/
 
-There is no CDFlow account.
+There is no CDFlow user account.
 
-Turning metadata/artwork lookup off leaves the main local features independent of the network.
+Metadata and artwork lookup can be disabled.
+
+With those features disabled, CDFlow's local disc functionality remains available.
 Troubleshooting
-No drive appears
+CDFlow does not open
 
-Check whether Linux itself sees the optical drive:
+Make sure the AppImage is executable:
 
-udisksctl status
+chmod +x CDFlow-0.1.0-x86_64.AppImage
 
 Then:
 
+./CDFlow-0.1.0-x86_64.AppImage
+
+AppImage / FUSE error
+
+Some systems may not have the FUSE compatibility library required by AppImage.
+
+On Fedora:
+
+sudo dnf install fuse-libs
+
+Then try CDFlow again.
+
+You can also use AppImage's extract-and-run mode:
+
+./CDFlow-0.1.0-x86_64.AppImage --appimage-extract-and-run
+
+My CD/DVD drive does not appear
+
+First check whether Linux can see the drive:
+
+udisksctl status
+
+You can also run:
+
 lsblk -o NAME,TYPE,RM,RO,MODEL,FSTYPE,LABEL,MOUNTPOINTS
 
-You are looking for an optical device commonly named something like:
+An optical drive commonly appears as something similar to:
 
 sr0
 
-but CDFlow does not require that exact name.
+If Linux itself cannot see the drive, CDFlow cannot use it.
+The drive appears, but the audio CD does not
 
-Check UDisks2:
+Check whether the disc can be read outside CDFlow.
 
-systemctl status udisks2.service
-
-The drive appears but the CD does not
-
-Check the actual optical device reported by udisksctl:
-
-cd-info /dev/sr0
-
-or for an audio CD:
+For a drive at /dev/sr0:
 
 cdparanoia -d /dev/sr0 -Q
 
-Replace /dev/sr0 with the real device path on your system.
+Your drive may use a different device path. Use the one shown by udisksctl status.
 
-Do not fix permissions by doing:
+If cdparanoia also cannot read the CD, check:
+
+    the condition of the disc
+
+    the optical drive
+
+    drive cables/connections
+
+    Linux device permissions
+
+Do not use broad permission workarounds such as:
 
 chmod 666 /dev/sr0
 
 and do not run CDFlow as root.
-Album shows but metadata does not
+The album is not being recognised
 
-Make sure Settings → Metadata contains a contact email/project URL and metadata lookup is enabled.
+Make sure you have configured:
 
-For development diagnostics:
+Settings → Metadata
 
-./run.sh --debug
+and entered a contact email or project URL.
 
-Metadata is optional; the CD can still be played or ripped without it.
-MusicBrainz is temporarily unavailable
+Then eject and reinsert the CD.
 
-If MusicBrainz is busy, CDFlow can receive a response such as HTTP 503.
+Not every physical pressing is guaranteed to exist in MusicBrainz. If no match can be found, CDFlow will continue using the locally available track information.
+“Metadata service is temporarily unavailable”
 
-CDFlow retries temporary errors automatically.
+MusicBrainz may occasionally be busy or rate limited.
 
-If retries are exhausted, the app should display:
+CDFlow automatically retries temporary service errors.
 
-Metadata service is temporarily unavailable.
+You do not need to eject the CD or restart the computer.
 
-The disc remains available locally.
-Ripping is unavailable
+Playback and ripping continue to work without online metadata.
+I can't rip a CD
 
-Check:
+On Fedora, make sure the recommended extraction/encoding tools are installed:
+
+sudo dnf install cdparanoia ffmpeg-free
+
+You can check them with:
 
 command -v cdparanoia
 command -v ffmpeg
 
-Then:
+A data CD appears but I can't browse it
 
-cdparanoia --version
-ffmpeg -version
+Linux may not have mounted it yet.
 
-On Fedora:
+Find the device:
 
-sudo dnf install cdparanoia ffmpeg-free
+udisksctl status
 
-Data CD is visible but cannot be browsed
-
-It may not yet be mounted.
-
-Try:
+Then, for example:
 
 udisksctl mount -b /dev/sr0
 
-using your actual optical device.
+Replace /dev/sr0 with your actual optical drive.
+Something still isn't working
 
-CDFlow intentionally browses the mounted filesystem rather than bypassing normal Linux permissions.
-AppImage does not launch
+Open an issue on GitHub:
+Report a CDFlow problem
 
-Make sure it is executable:
+When reporting an optical-drive issue, it helps to include:
 
-chmod +x CDFlow-0.1.0-x86_64.AppImage
+    Linux distribution
 
-If the system lacks FUSE 2 compatibility, Fedora users can install:
+    desktop environment
 
-sudo dnf install fuse-libs
+    CD/DVD drive model
 
-or use:
+    whether the drive is internal or USB
 
-./CDFlow-0.1.0-x86_64.AppImage --appimage-extract-and-run
+    what kind of disc you inserted
 
-Qt / Wayland problems
+    what CDFlow displayed
 
-A normal Plasma Wayland session should be detected automatically.
+    any relevant error message
 
-For a source checkout, compare:
+Do not post private information such as your metadata contact email.
+Frequently asked questions
+Does ripping damage the CD?
 
-QT_QPA_PLATFORM=wayland ./run.sh --debug
+No. CDFlow only reads the disc.
+Do I need an account?
 
-with the XWayland fallback:
+No.
+Do I need an internet connection?
 
-QT_QPA_PLATFORM=xcb ./run.sh --debug
+No for normal local CD features. Internet access is only needed for optional metadata and artwork retrieval.
+Can I use the CD after ripping it?
 
-If Qt cannot initialize a platform plugin:
+Yes. Ripping does not change the physical CD.
+Does CDFlow upload my ripped music?
 
-QT_DEBUG_PLUGINS=1 ./run.sh
+No.
+Where is my ripped music?
 
-Do not copy random Qt plugins from other Qt installations into CDFlow.
-Run from source
+By default:
 
-The AppImage is recommended for normal use. This section is for development.
-Fedora development packages
+~/Music/CDFlow/
 
-sudo dnf install \
-  python3 python3-pip python3-gobject \
-  udisks2 libcdio cdparanoia ffmpeg-free \
-  gstreamer1 gstreamer1-plugins-base gstreamer1-plugins-good
+Can CDFlow browse normal data CDs?
 
-CDFlow requires Python 3.12 or newer.
+Yes, provided Linux can mount the disc.
+Does CDFlow work on Windows?
 
-Create the environment:
+The current CDFlow release is designed for Linux.
+Does CDFlow work on macOS?
 
-python3 -m venv --system-site-packages .venv
-.venv/bin/python -m pip install --upgrade pip
-.venv/bin/python -m pip install -e .
+The current CDFlow release is designed for Linux.
+What Linux distribution should I use?
 
-Run:
+CDFlow is currently developed and tested primarily on Fedora KDE Plasma. Other modern Linux distributions may work, but have not necessarily received the same testing.
+About CDFlow
 
-./run.sh
+Physical media still has something digital libraries do not: you own the disc, you can hold it, lend it, collect it and keep it without depending on a service.
 
-Useful development commands:
+CDFlow is simply a modern Linux interface around that experience.
 
-./run.sh --demo audio
-./run.sh --demo data
-./run.sh --demo empty
-./run.sh --debug
-./run.sh --diagnose
+No subscription.
 
---diagnose checks which required and optional local components are available without opening the main interface.
-Building the AppImage
+No account.
 
-CDFlow's packaged build has two stages:
+No browser-based desktop shell.
 
-CDFlow source
-     │
-     ▼
-PyInstaller
-     │
-     ▼
-CDFlow AppDir
-     │
-     ▼
-appimagetool
-     │
-     ▼
-CDFlow-x86_64.AppImage
-
-Build dependencies
-
-sudo dnf install binutils patchelf
-.venv/bin/python -m pip install -e '.[appimage]'
-
-Download appimagetool
-
-curl -L \
-  https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage \
-  -o appimagetool-x86_64.AppImage
-
-chmod +x appimagetool-x86_64.AppImage
-
-Build CDFlow
-
-From the project root:
-
-APPIMAGETOOL="$PWD/appimagetool-x86_64.AppImage" ./build-appimage.sh
-
-The finished release is written to:
-
-dist/CDFlow-0.1.0-x86_64.AppImage
-
-Test the packaged application rather than only the source build:
-
-./dist/CDFlow-0.1.0-x86_64.AppImage
-
-Publishing a release
-
-Create a Git tag:
-
-git tag -a v0.1.0 -m "CDFlow v0.1.0"
-git push origin v0.1.0
-
-Create a GitHub Release for v0.1.0 and attach:
-
-dist/CDFlow-0.1.0-x86_64.AppImage
-
-Users can then download the standalone application from the Releases page.
-Development checks
-
-Install the developer extras:
-
-.venv/bin/python -m pip install -e '.[dev]'
-
-Run tests:
-
-.venv/bin/python -m pytest
-
-Run Ruff:
-
-.venv/bin/python -m ruff check src tests
-
-The automated suite focuses on deterministic application behavior. Physical optical-drive behavior should still be checked on the hardware and distribution you intend to support.
-Hardware test checklist
-
-Before publishing a build for other systems, verify:
-
-    CDFlow launches with an empty optical drive.
-
-    An audio CD is detected automatically.
-
-    Track count and durations are correct.
-
-    Metadata and artwork populate when enabled.
-
-    Play, pause, previous, next, volume and mute work.
-
-    Eject during playback returns safely to the empty state.
-
-    One track can be ripped to FLAC.
-
-    Full-disc ripping works.
-
-    WAV and MP3 output work when their dependencies are available.
-
-    Cancelling a rip does not freeze the UI.
-
-    Removing the disc while ripping is handled safely.
-
-    A data CD can be browsed read-only.
-
-    Cached album metadata works after reinserting a known disc.
-
-    Offline use still provides local disc information and ripping.
-
-    The AppImage passes the same hardware checks as the source checkout.
-
-Project structure
-
-src/cdflow/
-├── app/        # application controller, state and settings
-├── models/     # disc, album and track data
-├── services/   # UDisks2, playback, ripping, metadata and cache
-├── ui/         # Qt pages, widgets and styling
-└── assets/     # CDFlow artwork and icons
-
-packaging/      # desktop metadata, PyInstaller and AppImage files
-tests/          # automated tests
-
-Philosophy
-
-CDFlow exists for a simple reason: using a physical CD on a modern Linux desktop should not feel like opening a utility from twenty years ago.
-
-It keeps the physical part of the experience — inserting a disc, browsing an album, building a collection — while using a clean desktop interface and modern Linux services underneath.
-
-No account required.
-No browser pretending to be a desktop app.
-No always-running server.
-
-Just your discs.
+Just your CDs.
 License
 
-CDFlow is available under the MIT License.
+CDFlow is released under the MIT License.
 
 <div align="center">
-
 CDFlow
 
-Made for physical music on Linux.
+Physical music. Modern Linux.
 
-Download ·
-Source ·
-Issues
+Download
+  •  
+Report an issue
 
 </div>
